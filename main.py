@@ -1,4 +1,4 @@
-testing = True
+testing = False
 
 if testing:
     raw = '''0 3 6 9 12 15
@@ -22,12 +22,14 @@ s = 0
 
 for sequence in sequences:
     steps = [sequence]
-    while sum(steps[-1]) != 0:
+    
+    while set(steps[-1]) != {0}:
         steps.append(differences(steps[-1]))
-        print(steps[-1])
+    
     for i in range(len(steps) - 1, 0, -1):
-        print("Out ", steps[i])
         steps[i - 1].append(steps[i - 1][-1] + steps[i][-1])
+
     s += steps[0][-1]
 
 print(s)
+# 1681758909 too high
