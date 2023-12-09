@@ -10,26 +10,25 @@ else:
 
 sequences = [list(map(int, x.strip().split())) for x in raw]
 
-# predict next number in sequence
 
 def differences(s):
-    new_s = []
-    for i in range(len(s) - 1):
-        new_s.append(s[i+1] - s[i])
-    return new_s
+    return [s[i + 1] - s[i] for i in range(len(s) - 1)]
+
 
 s = 0
-
+t = 0
 for sequence in sequences:
-    steps = [sequence]
-    
-    while set(steps[-1]) != {0}:
-        steps.append(differences(steps[-1]))
-    
-    for i in range(len(steps) - 1, 0, -1):
-        steps[i - 1].append(steps[i - 1][-1] + steps[i][-1])
+    history = [sequence]
 
-    s += steps[0][-1]
+    while set(history[-1]) != {0}:
+        history.append(differences(history[-1]))
 
-print(s)
-# 1681758909 too high
+    for i in range(len(history) - 1, 0, -1):
+        history[i - 1].append(history[i - 1][-1] + history[i][-1])
+        history[i - 1].insert(0, (history[i - 1][0] - history[i][0]))
+
+    s += history[0][-1]
+    t += history[0][0]
+
+print(f'Part 1: {s}')
+print(f'Part 2: {t}')
