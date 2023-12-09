@@ -22,10 +22,9 @@ s = 0
 
 for sequence in sequences:
     steps = [sequence]
-
     while set(steps[-1]) != {0}:
         steps.append(differences(steps[-1]))
-
+    
     for i in range(len(steps) - 1, 0, -1):
         steps[i - 1].append(steps[i - 1][-1] + steps[i][-1])
 
