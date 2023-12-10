@@ -65,10 +65,18 @@ while current != start:
         
 print("Part 1", (len(path) - 1) // 2)
 
-grid_lst = [list(line) for line in grid]
-for c in path:
-    grid_lst[c[0]][c[1]] = '█'
 
-with open('day_09.grid', 'w') as r:
-    for line in grid_lst:
+# assuming this is inside
+inside_start = (40, 14)
+INSIDE = '⬤' #'\u2B24'
+
+
+
+matrix = [list(line) for line in grid]
+
+for c in path:
+    matrix[c[0]][c[1]] = '█'
+
+with open('day_10.grid', 'w') as r:
+    for line in matrix:
         r.write(''.join(line) + '\n')
