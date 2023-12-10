@@ -66,16 +66,19 @@ while current != start:
 print("Part 1", (len(path) - 1) // 2)
 
 
-# assuming this is inside
-inside_start = (40, 14)
+# Search for contained squares
+inside_start = (41, 14)
+outside_start = (41, 12)
 INSIDE = '⬤' #'\u2B24'
-
-
+PATH = '█'
 
 matrix = [list(line) for line in grid]
 
+
+
+# Create visualization
 for c in path:
-    matrix[c[0]][c[1]] = '█'
+    matrix[c[0]][c[1]] = PATH
 
 with open('day_10.grid', 'w') as r:
     for line in matrix:
