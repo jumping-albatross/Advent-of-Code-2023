@@ -49,10 +49,12 @@ def find_exit(previous, current):
         c = current[COL]
         try:
             if grid[r][c] in src and grid[rd][cd] in dest and [rd, cd] != previous:
+                print(previous, current, (rd, cd))
                 return [rd, cd]
         except:
             print('Except', rd,cd)
 
+    print(grid[r][c], "src", src, grid[rd][cd], "dest", dest, [r, c], previous)
     raise Exception(f"Ooops. Find exit failed with {previous}, {current}")
 
 path = [start]
@@ -63,12 +65,4 @@ while current != start:
     current = find_exit(path[-2], current)
     path.append(current)
         
-print("Part 1", (len(path) - 1) // 2)
-
-grid_lst = [list(line) for line in grid]
-for c in path:
-    grid_lst[c[0]][c[1]] = 'X'
-
-with open('day_09.grid', 'w') as r:
-    for line in grid_lst:
-        r.write(''.join(line) + '\n')
+print((len(path) - 1) // 2)
