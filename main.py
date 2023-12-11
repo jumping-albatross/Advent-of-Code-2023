@@ -52,6 +52,7 @@ def find_exit(previous, current):
                 return [rd, cd]
         except:
             print('Except', rd,cd)
+            raise Exception("Why did we get here?")
 
     raise Exception(f"Ooops. Find exit failed with {previous}, {current}")
 
@@ -67,18 +68,34 @@ print("Part 1", (len(path) - 1) // 2)
 
 
 # Search for contained squares
-inside_start = (41, 14)
-outside_start = (41, 12)
-INSIDE = '⬤' #'\u2B24'
-PATH = '█'
+start_inside = (41, 14)
+start_outside = (41, 12)
+start_pipe = (41, 13)
+start_idx = path.index(list(start_pipe))
+
+INSIDE_SYMBOL = '⬤' #'\u2B24'
+PATH_SYMBOL = '█'
 
 matrix = [list(line) for line in grid]
+
+new_edge = [[path[start_idx]]]
+for idx in range(start_idx, start_idx + len(path), 1):
+    # NEXT MOVE
+    # destination r, c; acceptable src pipe, dest pipe
+    current = path[idx % len(path)]
+    next = path[(idx + 1) % len(path)]
+ 
+    src_r = current[0]
+    src_c = current[1]
+    dest_r = next[0]
+    dest_c = next[1]
+    
 
 
 
 # Create visualization
 for c in path:
-    matrix[c[0]][c[1]] = PATH
+    matrix[c[0]][c[1]] = PATH_SYMBOL
 
 with open('day_10.grid', 'w') as r:
     for line in matrix:

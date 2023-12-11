@@ -49,7 +49,7 @@ def find_exit(previous, current):
         c = current[COL]
         try:
             if grid[r][c] in src and grid[rd][cd] in dest and [rd, cd] != previous:
-                print(previous, current, (rd, cd))
+                # print(previous, current, (rd, cd))
                 return [rd, cd]
         except:
             print('Except', rd,cd)
@@ -65,4 +65,17 @@ while current != start:
     current = find_exit(path[-2], current)
     path.append(current)
         
-print((len(path) - 1) // 2)
+print("Part 1", (len(path) - 1) // 2)
+
+INSIDE_SYMBOL = '⬤' #'\u2B24'
+PATH_SYMBOL = '█'
+
+matrix = [list(line) for line in grid]
+
+# Create visualization
+for c in path:
+    matrix[c[0]][c[1]] = PATH_SYMBOL
+
+with open('day_10.grid', 'w') as r:
+    for line in matrix:
+        r.write(''.join(line) + '\n')
