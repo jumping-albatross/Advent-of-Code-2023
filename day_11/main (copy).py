@@ -26,12 +26,12 @@ for i, m in enumerate(matrix_transpose):
     if len(set(m)) == 1:
         cols.append(i)
 
-for count, i in enumerate(rows):
-    matrix.insert(i + count, ['.'] * len(matrix[0]))
+for i in rows[::-1]:
+    matrix.insert(i, ['.'] * len(matrix[0]))
 
-for count, i in enumerate(cols):
+for i in cols[::-1]:
     for j in range(len(matrix)):
-        matrix[j].insert(i + count, '.')
+        matrix[j].insert(i, '.')
 
 stars = []
 for r, line in enumerate(matrix):
