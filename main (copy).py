@@ -7,8 +7,8 @@ raw = """???.### 1,1,3
     "\n"
 )
 
-with open("data12.txt") as r:
-    raw = r.read().split("\n")
+# with open("data12.txt") as r:
+#     raw = r.read().split("\n")
 
 rows = []
 for row in raw:
@@ -16,25 +16,13 @@ for row in raw:
     backups = [int(x) for x in backups.split(",")]
     rows.append([conditions, backups])
 
-# unfold
-for i, row in enumerate(rows):
-    rows[i][0] = row[0] + ("?" + row[0]) * 4
-    rows[i][1] = row[1] * 5
-
-
 field_arrangements = []
+
 
 def is_damaged_spring(conditions):
     return conditions.find(".") < 0
 
-def memoize(f):
-    memo = {}
-    def helper(x,y):
-        if (x,tuple(y)) not in memo:            
-            memo[(x,tuple(y))] = f(x,y)
-        return memo[(x,tuple(y))]
-    return helper
-@memoize
+
 def try_round(c_s, backups):
     """Assume discarded conditions that have been examined are possible"""
 
@@ -63,8 +51,7 @@ for conditions, backups in rows:
     arrangements = try_round(conditions, backups)
     field_arrangements.append(arrangements)
 
-print(f"Part 2:\nObserved arrangements = {sum(field_arrangements)}")
+print(f"Part 1:\nObserved arrangements = {sum(field_arrangements)}")
 # print(field_arrangements)
-print("Expected arrangements = 525152")
-print("[1, 16384, 1, 16, 2500, 506250]")
-exit()
+print("Expected arrangements = 21")
+print("[1, 4, 1, 1, 4, 10]")
