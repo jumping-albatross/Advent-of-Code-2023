@@ -1,5 +1,8 @@
 # Day 16 Part 2
 # Note: \ (backslash) has been replaced with ` (backtick) in raw data
+import time
+
+t1 = time.time()
 
 raw = """.|...`....
 |.-.`.....
@@ -107,3 +110,4 @@ for y in range(R):
             most_energetic = energy
 
 print(f"most_energetic = {most_energetic}")
+print(time.time() - t1)
