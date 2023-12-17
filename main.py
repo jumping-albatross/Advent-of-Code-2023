@@ -15,7 +15,7 @@ grid = """2413432311323
 4564679986453
 1224686865563
 2546548887735
-4322674655533""".split('\n')
+4322674655533""".split("\n")
 
 # with open('data17.txt') as f:
 #     grid = f.read().split('\n')
@@ -57,8 +57,7 @@ while queue:
             else:
                 new_longest_run = 1
 
-            heapq.heappush(queue,
-                           (cost + v, r + dy, c + dx, idx, new_longest_run))
+            heapq.heappush(queue, (cost + v, r + dy, c + dx, idx, new_longest_run))
 
             visited[(r, c, last_direction, longest_run)] = cost
 
@@ -77,14 +76,14 @@ reversed_path = [(R - 1, C - 1)]
 
 while reversed_path[-1] != (0, 0):
     r, c = reversed_path[-1]
-    min_tile = (999999,(999999,999999))
-    for (dr, dc) in ((0,1), (1,0), (0,-1),(-1,0)):
+    min_tile = (999999, (999999, 999999))
+    for dr, dc in ((0, 1), (1, 0), (0, -1), (-1, 0)):
         nr, nc = r + dr, c + dc
         try:
-            min_tile = min(min_tile, (costs[(nr, nc)],(nr,nc)))
+            min_tile = min(min_tile, (costs[(nr, nc)], (nr, nc)))
         except:
-            "oops I did it again. Nothing to see. Move on."
-    if min_tile == (999999,(999999,999999)):
+            "Nothing to see. Too lazy to write an if statement."
+    if min_tile == (999999, (999999, 999999)):
         raise Exception("Ooops. No minimum tiles found")
     reversed_path.append((min_tile[1]))
 
@@ -94,16 +93,16 @@ print(f"{len(visited) = }")
 
 # {(12, 7, 0, 9) : 194}
 
-with open('day17.path', 'w') as f:
+with open("day17.path", "w") as f:
     for v in visited:
         f.write(f"{{{str(v)} : {visited[v]}}}")
-        f.write('\n')
+        f.write("\n")
 
 print()
 print("WARNING: This is NOT the correct path per the rules")
-print("         Chances are it's '"'just'"' modified dijkstra's" )
-illustration = [['.' for _ in range(C)] for _ in range(R)]
-for (r, c) in reversed_path:
+print("         Chances are it's '" "just" "' modified dijkstra's")
+illustration = [["." for _ in range(C)] for _ in range(R)]
+for r, c in reversed_path:
     illustration[r][c] = "*"
 for i in illustration:
-    print(''.join(i))
+    print("".join(i))
