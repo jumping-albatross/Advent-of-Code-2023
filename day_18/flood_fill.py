@@ -2,7 +2,6 @@
 # https://www.geeksforgeeks.org/flood-fill-algorithm/
 
 
-# FloodFill function
 def flood_fill(grid, r, c, prev_c, new_c):
     """Accepts grid as 2-d array, starting row and column as r, c,
     and the previous colour and new colour values"""
