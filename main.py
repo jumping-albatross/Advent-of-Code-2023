@@ -1,37 +1,38 @@
-raw = """px{a<2006:qkq,m>2090:A,rfg}
-pv{a>1716:R,A}
-lnx{m>1548:A,A}
-rfg{s<537:gd,x>2440:R,A}
-qs{s>3448:A,lnx}
-qkq{x<1416:A,crn}
-crn{x>2662:A,R}
-in{s<1351:px,qqz}
-qqz{s>2770:qs,m<1801:hdj,R}
-gd{a>3333:R,R}
-hdj{m>838:A,pv}
+# flip-flop (%)
+# default: initially off
+# receive: if receive HIGH ignore
+# receive: if receive LOW flips states AND sends HIGH if turns ON or LOW if turns off
 
-{x=787,m=2655,a=1222,s=2876}
-{x=1679,m=44,a=2067,s=496}
-{x=2036,m=264,a=79,s=2244}
-{x=2461,m=1339,a=466,s=291}
-{x=2127,m=1623,a=2188,s=1013}""".strip()
+# conjunction (&)
+# default: LOW
+# receive: upon receipt of pulse it remembers most recent state
+# receive, part 2: if all HIGH send LOW, otherwise send HIGH
 
-# with open("data19.txt") as f:
-#     raw = f.read().strip()
+# broadcast module (broadcaster)
+# rebroadcasts received pulse to all destination modules
+
+# button module (button)
+# single LOW to broadcaster
+
+raw = """broadcaster -> a, b, c
+%a -> b
+%b -> c
+%c -> inv
+&inv -> a""".split('\n')
+
+# with open('day20.txt') as f:
+#     raw = f.read().split('\n')
 
 
-raw_i, raw_parts = raw.split('\n\n')
-raw_i = raw_i.split('\n')
+modules = {}
+order = []
 
-instructions = {}
-
-for inst in raw_i:
-    name, _r = inst[:-1].split('{')
-    rules = [x.split(":") if ':' in x else x for x in _r.split(',')]
-    print(name, rules)
-    instructions[name] = rules
-
-possibilities = 0
-
-for a in instructions['in']:
-    
+for line in raw:
+    if line[:len("broadcaster")] == "broadcaster":
+        broadcaster = line.split('-> ')[1].split(', ')
+    elif line[0] == "%":
+        
+    elif line[0] == "&":
+        pass
+    else:
+        raise Exception(f"{line} not processed")
