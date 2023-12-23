@@ -50,20 +50,21 @@ highs = 0
 
 def push(signal, source, destinations):
     """Push signal (LOW, HIGH), source module and destination module(s) onto queue"""
+
     global _c, lows, highs
     print(f"PUSH: {_c:3} {'HIGH' if signal else 'LOW':>5}, {source:>12} >>> {destinations}")
+
     if signal == LOW:
         lows += len(destinations)
     else:
         highs += len(destinations)
+
     for d in destinations:
         if type(d) == list:
             print(f"#####     PUSH: {_c} {'HIGH' if signal else 'LOW'}, {source = }, {destinations = }")
             print(f"{destinations = }... this is the problem")
             raise Exception('oops. List')
         _c += 1
-        # lows += signal == LOW
-        # highs += signal == HIGH
         heapq.heappush(q, [_c, signal, source, d])
 
 

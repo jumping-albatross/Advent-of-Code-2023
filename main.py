@@ -16,7 +16,6 @@ with open('day20.txt') as f:
     raw = f.read().split('\n')
 
 modules = {}
-order = []
 LOW = 0
 HIGH = 1
 
@@ -32,7 +31,14 @@ for line in raw:
         _type = 'flip-flop' if line[0] == "%" else 'conjunction'
         v = [dest, LOW] if _type == 'flip-flop' else [dest, {}]
         modules[name] = [_type, *v]
-        order.append(name)
+
+tracked = {} # Part 2. Determine periods
+for r in raw:
+    src, dest = r.split(' -> ')
+    src = src[1:]
+    if 'ql' in dest:
+        tracked[src] = []
+
 
 # program the conjunctions
 for name, details in modules.items():
@@ -75,7 +81,7 @@ for i in range(1000):
     r = 0
     while q:
         r += 1
-        _, signal, src, name = heapq.heappop(q)
+        part_2_c, signal, src, name = heapq.heappop(q)
         if name != 'output' and name != 'rx':
             module = modules[name]
         else:
@@ -97,9 +103,12 @@ for i in range(1000):
             push(modules[name][2], name, modules[name][1])
         elif module[0] == 'conjunction':
             # may the SOURCE be with you
+            # & only conjunctions lead to rx... maybe that's all that's needed
             if is_trouble_shooting:
                 print(f"     conjunction: {modules[name] = }")
             modules[name][2][src] = signal
+            if name in tracked and signal == HIGH:
+                tracked[name].append(part_2_c)
             s = 0
             for stat in modules[name][2].values():
                 s += stat
@@ -111,6 +120,20 @@ for i in range(1000):
                 push(HIGH, name, modules[name][1])
 
 print(f"{lows = }, {highs = }, ({lows * highs = }) {lows * highs - 32000000 = }")
+
+sss = []
+cc = 0
+for i in tracked:
+    s = set()
+    v = tracked[i]
+    for jj in range(len(v) - 1):
+        s.add(v[jj + 1] - v[jj])
+    sss.append(s)
+
+for s in sss:
+    print(f"{len(s) = }")
+    print(s)
+    print()
 # flip-flop (%)
 # default: initially off
 # receive: if receive HIGH ignore
