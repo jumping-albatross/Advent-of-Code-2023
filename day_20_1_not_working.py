@@ -1,5 +1,5 @@
-#https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
-#
+from collections import deque
+
 testing = False
 
 if testing:
@@ -26,24 +26,46 @@ for i, row in enumerate(grid):
         grid[i] = row.replace('S', '.')
         break
 
-q = set()
-q.add(start)
+q = deque()
+q.append((STEPS, start))
 
-for i in range(STEPS):
-    qq = set()
-    for (r, c) in q:
+plots_reached = set()
+plots_walked = {}
+
+
+counter = 0
+
+while q:
+    counter += 1
+    steps_remaining, coord = q.pop()
+    if (steps_remaining) % 2 == 0:
+        plots_reached.add(coord)
+
+    # if counter < 10:
+    #     print(f"{coord = }")
+    # if counter % 100000 == 0:
+    #     print(f"{counter}, {steps_remaining = }, {coord = }, {len(q) = }")
+
+    if steps_remaining > 0:
+        steps_remaining -= 1
+        r, c = coord
         for (dr, dc) in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
             nr = r + dr
             nc = c + dc
-            if grid[nr][nc] == '.':
-                qq.add((nr, nc))
-    q = qq
+
+            if grid[nr][nc] == '.' and (nr, nc) not in plots_walked:
+                q.append((steps_remaining, (nr, nc)))
+
+    if coord in plots_walked:
+        plots_walked[coord] += 1
+    else:
+        plots_walked[coord] = 1
 
 grid_l = []
 for g in grid:
     grid_l.append(list(g))
 
-for (r, c) in q:
+for (r, c) in plots_reached:
     grid_l[r][c] = "O"
 
 print(grid_l[start[0]][start[1]])
@@ -68,7 +90,7 @@ for r, line in enumerate(grid_l):
         if testing:
             matches = matches and ''.join(line) == check[r]
 
-print(f"{len(q) = }")
+print(len(plots_reached))
 print(f"{start = }")
 if testing:
     print(f"{matches = }")
