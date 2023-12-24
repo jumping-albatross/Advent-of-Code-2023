@@ -53,8 +53,8 @@ while paths:
     p = paths.pop()
     if p[-1] == terminal:
         # print(p)
-        print(len(p) - 1)
         m = max(m, len(p) - 1)
+        print(f"current: {len(p) - 1:>6}, max {m:>6}")
 
     # print(p)
     r, c = p[-1]
