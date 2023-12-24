@@ -1,6 +1,6 @@
 #https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
 #
-testing = True
+testing = False
 
 if testing:
     grid = """#.#####################
@@ -26,16 +26,10 @@ if testing:
 #.###.###.#.###.#.#v###
 #.....###...###...#...#
 #####################.#
-"""
+""".strip().split('\n')
 else:
     with open('day23.txt') as f:
-        grid = f.read()
-
-grid = grid.strip()
-for ch in '^v<>':
-    grid = grid.replace(ch, '.')
-
-grid = grid.split('\n')
+        grid = f.read().strip().split('\n')
 
 start = (0, 1)
 terminal = (len(grid) - 1, len(grid[0]) - 2)
@@ -70,7 +64,7 @@ while paths:
             cell = grid[_r][_c]
             if cell != '#':
                 if 0 <= _r < len(grid) and 0 <= _c < len(grid[0]) and cell != '#':
-                    if (cell == '.'):
+                    if (cell == '>' and _r == r and _c > c) or (cell == 'v' and _r > r and _c == c) or (cell == '.'):
                         if (_r, _c) not in p:
                             np = p[:]
                             np.append((_r, _c))
@@ -83,7 +77,3 @@ for p in paths_ended:
 print(f"{len(grid) = }, {len(grid[0]) = }")
 print(f"{len(paths_ended)}")
 print(f"{m = }")
-
-# 5890 too low
-# 5938 too low
-
