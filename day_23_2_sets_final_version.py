@@ -1,6 +1,6 @@
 #https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
 #
-testing = False
+testing = True
 
 if testing:
     grid = """#.#####################
