@@ -1,33 +1,6 @@
-"""
-01234567890123456789012
-#.#####################
-#.......#########...###
-#######.#########.#.###
-###.....#.>.>.###.#.###
-###v#####.#v#.###.#.###
-###.>...#.#.#.....#...#
-###v###.#.#.#########.#
-###...#.#.#.......#...#
-#####.#.#.#######.#.###
-#.....#.#.#.......#...#
-#.#####.#.#.#########v#
-#.#...#...#...###...>.#
-#.#.#v#######v###.###v#
-#...#.>.#...>.>.#.###.#
-#####v#.#.###v#.#.###.#
-#.....#...#...#.#.#...#
-#.#########.###.#.#.###
-#...###...#...#...#.###
-###.###.#.###v#####v###
-#...#...#.#.>.>.#.>.###
-#.###.###.#.###.#.#v###
-#.....###...###...#...#
-#####################.#
-"""
-
 # https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
 
-testing = True
+testing = False
 
 if testing:
     grid = """#.#####################
@@ -73,8 +46,8 @@ print(f"{terminal = }")
 
 # extract nodes_queue, edges and distances
 
-edges = set()  # { node : [{node1, node2, distance)} }
-nodes = set()
+edges = {}  # { node : [{node1, node2, distance)} }
+nodes = {}
 nodes_queue = {(start, (1, 0))}  # {(node, (dr, dc)}
 nodes_visited = set()
 
@@ -95,25 +68,30 @@ def count_paths(p, deltas):
 def add_edges_nodes(a, b, l):
     """a is start, b is stop, l is distance"""
     a, b = sorted([a, b])
-    edges.add((a, b, l))
-    nodes.add(a)
-    nodes.add(b)
+    edges[(a, b)] = l
+
+    if a in nodes:
+        nodes[a].add(b)
+    else:
+        nodes[a] = {b}
+
+    if b in nodes:
+        nodes[b].add(a)
+    else:
+        nodes[b] = {a}
 
 
 count = 0
 while nodes_queue:
     count += 1
-    print(f"Round: {count}, {len(edges) = }, {len(nodes_queue) = }, {len(nodes_visited) = }")
 
     p, (prev_dr, prev_dc) = nodes_queue.pop()
     nodes_visited.add((p, (prev_dr, prev_dc)))
     # when the node was pushed to the queue the next move's direction was included
-    print(f"{p = }, {(prev_dr, prev_dc) = }")
+    print(f"Round: {count}, {len(edges) = }, {len(nodes_queue) = }, {len(nodes_visited) = }, {p = }, {(prev_dr, prev_dc) = }")
     length = 1
     r = p[0] + prev_dr
     c = p[1] + prev_dc
-
-    print(f"{count_paths((r, c), (prev_dr, prev_dc)) = }")
 
     while count_paths((r, c), (prev_dr, prev_dc)) == 1 and (r, c) != terminal:
         for dr, dc in zip((1, -1, 0, 0), (0, 0, 1, -1)):
@@ -154,8 +132,42 @@ for edge in sorted(edges):
 
 print('\nNodes found')
 for node in sorted(nodes):
-    print(f"{node}")
+    print(f"{node} : {nodes[node]}")
 print()
 
 print(f"{ROWS = }, {COLS = }")
 print(f"{len(edges) = }, {len(nodes) = }")
+
+for (r, c) in nodes:
+    t = list(grid[r])
+    t[c] = '█'
+    grid[r] = ''.join(t)
+
+
+print('\nLooking for longest edge...')
+
+q = [[start]]
+finished = []
+
+while q:
+    path = q.pop()
+    for dest in nodes[path[-1]]:
+        if dest not in path:
+            p2 = path[:]
+            p2.append(dest)
+            if dest == terminal:
+                finished.append(p2)
+            else:
+                q.append(p2)
+
+m = 0
+for f in finished:
+    d = 0
+    for i in range(len(f) - 1):
+        v = tuple(sorted(tuple([f[i], f[i + 1]])))
+        d += edges[v]
+    # print(d)
+    m = max(m, d)
+
+print(len(finished))
+print(f"This is it: {m}")
