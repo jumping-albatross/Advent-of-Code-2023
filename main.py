@@ -1,173 +1,173 @@
-# https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
+# day 25
+# https://www.reddit.com/r/adventofcode/comments/18qbsxs/comment/kf12xgf/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+# https://python-course.eu/applications-python/graphs-python.php
+# https://www.reddit.com/r/adventofcode/comments/18qbsxs/comment/keuafrl/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
+import random
+from time import time
 
 testing = False
 
 if testing:
-    grid = """#.#####################
-#.......#########...###
-#######.#########.#.###
-###.....#.>.>.###.#.###
-###v#####.#v#.###.#.###
-###.>...#.#.#.....#...#
-###v###.#.#.#########.#
-###...#.#.#.......#...#
-#####.#.#.#######.#.###
-#.....#.#.#.......#...#
-#.#####.#.#.#########v#
-#.#...#...#...###...>.#
-#.#.#v#######v###.###v#
-#...#.>.#...>.>.#.###.#
-#####v#.#.###v#.#.###.#
-#.....#...#...#.#.#...#
-#.#########.###.#.#.###
-#...###...#...#...#.###
-###.###.#.###v#####v###
-#...#...#.#.>.>.#.>.###
-#.###.###.#.###.#.#v###
-#.....###...###...#...#
-#####################.#
-"""
+    raw_connections = """jqt: rhn xhk nvd
+rsh: frs pzl lsr
+xhk: hfx
+cmg: qnr nvd lhk bvb
+rhn: xhk bvb hfx
+bvb: xhk hfx
+pzl: lsr hfx nvd
+qnr: nvd
+ntq: jqt hfx bvb xhk
+nvd: lhk
+lsr: lhk
+rzs: qnr cmg lsr rsh
+frs: qnr lhk lsr"""
 else:
-    with open('day23.txt') as f:
-        grid = f.read()
+    with open('day25.txt') as f:
+        raw_connections = f.read()
 
-grid = grid.strip()
-for ch in '^v<>':
-    grid = grid.replace(ch, '.')
-
-grid = grid.split('\n')
-
-ROWS = len(grid)
-COLS = len(grid[0])
-
-start = (0, 1)
-terminal = (ROWS - 1, COLS - 2)
-print(f"{terminal = }")
-
-# extract nodes_queue, edges and distances
-
-edges = {}  # { node : [{node1, node2, distance)} }
+connections = raw_connections.strip().splitlines()
 nodes = {}
-nodes_queue = {(start, (1, 0))}  # {(node, (dr, dc)}
-nodes_visited = set()
-
-
-def count_paths(p, deltas):
-    r, c = p
-    incoming_dr, incoming_dc = deltas
-    paths_available = 0
-    for dr, dc in zip((1, -1, 0, 0), (0, 0, 1, -1)):
-        _r = r + dr
-        _c = c + dc
-
-        if (incoming_dr, incoming_dc) != (-dr, -dc) and 0 <= _r < ROWS and 0 <= _c < COLS and grid[_r][_c] != '#':
-            paths_available += 1
-    return paths_available
-
-
-def add_edges_nodes(a, b, l):
-    """a is start, b is stop, l is distance"""
-    a, b = sorted([a, b])
-    edges[(a, b)] = l
-
-    if a in nodes:
-        nodes[a].add(b)
+for line in connections:
+    node, neighbours = line.split(': ')
+    neighbours = neighbours.split(' ')
+    if node not in nodes:
+        nodes[node] = {neighbours[0]}
     else:
-        nodes[a] = {b}
+        nodes[node].add(neighbours[0])
 
-    if b in nodes:
-        nodes[b].add(a)
-    else:
-        nodes[b] = {a}
+    for _n in neighbours[1:]:
+        nodes[node].add(_n)
 
-
-count = 0
-while nodes_queue:
-    count += 1
-
-    p, (prev_dr, prev_dc) = nodes_queue.pop()
-    nodes_visited.add((p, (prev_dr, prev_dc)))
-    # when the node was pushed to the queue the next move's direction was included
-    print(f"Round: {count}, {len(edges) = }, {len(nodes_queue) = }, {len(nodes_visited) = }, {p = }, {(prev_dr, prev_dc) = }")
-    length = 1
-    r = p[0] + prev_dr
-    c = p[1] + prev_dc
-
-    while count_paths((r, c), (prev_dr, prev_dc)) == 1 and (r, c) != terminal:
-        for dr, dc in zip((1, -1, 0, 0), (0, 0, 1, -1)):
-            _r = r + dr
-            _c = c + dc
-
-            if (-dr, -dc) != (prev_dr, prev_dc) and 0 <= _r < ROWS and 0 <= _c < COLS:
-                cell = grid[_r][_c]
-                if cell != '#':
-                    length += 1
-                    r, c = _r, _c
-                    prev_dr, prev_dc = dr, dc
-                    break
-
-    if (r, c) == terminal:
-        add_edges_nodes(p, terminal, length)
-    else:
-        cnt = count_paths((r, c), (prev_dr, prev_dc))
-        if cnt == 2 or cnt == 3:
-            add_edges_nodes(p, (r, c), length)
-            for dr, dc in zip((1, -1, 0, 0), (0, 0, 1, -1)):
-                _r = r + dr
-                _c = c + dc
-
-                if 0 <= _r < ROWS and 0 <= _c < COLS:
-                    cell = grid[_r][_c]
-                    if cell != '#' and ((r, c), (dr, dc)) not in nodes_visited:
-                        nodes_queue.add(((r, c), (dr, dc)))
-        elif cnt == 0:
-            pass
+    for _n in neighbours:
+        if _n not in nodes:
+            nodes[_n] = {node}
         else:
-            print(f"{(r, c) = }")
-            raise Exception(f"{cnt} path(s) when 2 or 0 expected")
+            nodes[_n].add(node)
 
-print('\nEdges found')
-for edge in sorted(edges):
-    print(f"{edge}")
+# cut the nodes
+if not testing:
+    pass
+    for (c1, c2) in [('fch', 'fvh'), ('jbz', 'sqh'), ('nvg', 'vfj')]:
+        nodes[c1].remove(c2)
+        nodes[c2].remove(c1)
 
-print('\nNodes found')
-for node in sorted(nodes):
-    print(f"{node} : {nodes[node]}")
-print()
+def find_random_path(start_vertex, end_vertex, path=None):
+    """ find a path from start_vertex to end_vertex
+        in graph """
+    if path == None:  # TO DO conditional seems redundant
+        path = []
+    graph = nodes
+    path = path + [start_vertex]
+    if start_vertex == end_vertex:
+        return path
+    if start_vertex not in graph:
+        return None
 
-print(f"{ROWS = }, {COLS = }")
-print(f"{len(edges) = }, {len(nodes) = }")
+    neighbours = list(graph[start_vertex])
+    random.shuffle(neighbours)
+    for vertex in neighbours:
+        if vertex not in path:
+            extended_path = find_random_path(vertex, end_vertex, path)
+            if extended_path:
+                return extended_path
+    return None
 
-for (r, c) in nodes:
-    t = list(grid[r])
-    t[c] = '█'
-    grid[r] = ''.join(t)
+
+def find_ni_random_path(start_vertex, end_vertex):
+    """ iteratively find a path from start_vertex to end_vertex
+        in graph """
+    graph = nodes
+    stack = [(start_vertex, [start_vertex])]
+    while stack:
+        (vertex, path) = stack.pop()
+        if vertex == end_vertex:
+            return path
+        neighbours = list(graph[vertex])
+        random.shuffle(neighbours)
+        for neighbour in neighbours:
+            if neighbour not in path:
+                stack.append((neighbour, path + [neighbour]))
+                break
+    return None
 
 
-print('\nLooking for longest edge...')
+def find_path(start_vertex, end_vertex, path=None):
+    """ find a path from start_vertex to end_vertex
+        in graph """
+    if path == None:  # TO DO conditional seems redundant
+        path = []
+    graph = nodes
+    path = path + [start_vertex]
+    if start_vertex == end_vertex:
+        return path
+    if start_vertex not in graph:
+        return None
+    for vertex in graph[start_vertex]:
+        if vertex not in path:
+            extended_path = find_path(vertex, end_vertex, path)
+            if extended_path:
+                return extended_path
+    return None
 
-q = [[start]]
-finished = []
 
-while q:
-    path = q.pop()
-    for destination in nodes[path[-1]]:
-        if destination not in path:
-            p2 = path[:]
-            p2.append(destination)
-            if destination == terminal:
-                finished.append(p2)
-            else:
-                q.append(p2)
+node_frequencies = {}
 
-m = 0
-for f in finished:
-    d = 0
-    for i in range(len(f) - 1):
-        v = tuple(sorted(tuple([f[i], f[i + 1]])))
-        d += edges[v]
-    # print(d)
-    m = max(m, d)
+rounds = 0
+k1, k2 = list(nodes.keys()), list(nodes.keys())
+sz = len(k1)
 
-print(len(finished))
-print(f"This is it: {m}")
+
+def return_edges(path):
+    e = set()
+    for i in range(len(path) - 1):
+        e.add(tuple(sorted([path[i], path[i + 1]])))
+    return e
+
+
+has_cut = False
+if not has_cut:
+    # find nodes to cut
+    for i in range(100):
+        random.shuffle(k1)
+        random.shuffle(k2)
+        for node_0 in zip(k1[:sz], k2[:sz]):
+            rounds += 1
+            pt = find_ni_random_path(node_0[0], node_0[1])
+            if pt != None:
+                for n in return_edges(pt):
+                    if n in node_frequencies:
+                        node_frequencies[n] += 1
+                    else:
+                        node_frequencies[n] = 1
+
+    print(sorted(list(node_frequencies.items()), key=lambda x: x[1])[-10:])
+
+    s1 = []
+    for (x, _) in sorted(list(node_frequencies.items()), key=lambda x: x[1])[-3:]:
+        s1.append(x)
+
+    print('Testing: ', sorted([('hfx', 'pzl'), ('bvb', 'cmg'), ('jqt', 'nvd')]))
+    print('         ', sorted(s1))
+else:
+    set1 = set()
+    founder1 = 'fch'
+    set2 = set()
+    founder2 = 'fvh'
+    t1 = time()
+    while len(set1) + len(set2) - len(nodes.keys()):
+        for founder_n, set_n, set_other in zip([founder1, founder2], [set1, set2], [set2, set1]):
+            for i in list(nodes.keys()):
+                if i in set_other or i in set_n:
+                    break
+                pt = find_ni_random_path(i, founder_n)
+                if pt != None:
+                    set_n.add(i)
+                    break
+        print(f"{len(nodes.keys()) = }")
+        print(f"{len(set1) = }")
+        print(f"{len(set2) = }")
+        print(f"{len(set1) + len(set2) - len(nodes.keys()) = }")
+        print(f"{len(set1) * len(set2) = }")
+        print()
+    print(time() - t1)
