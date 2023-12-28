@@ -46,11 +46,10 @@ for line in connections:
             nodes[_n].add(node)
 
 # cut the nodes
-if not testing:
-    pass
-    for (c1, c2) in [('fch', 'fvh'), ('jbz', 'sqh'), ('nvg', 'vfj')]:
-        nodes[c1].remove(c2)
-        nodes[c2].remove(c1)
+# if not testing:
+#     for (c1, c2) in [('fch', 'fvh'), ('jbz', 'sqh'), ('nvg', 'vfj')]:
+#         nodes[c1].remove(c2)
+#         nodes[c2].remove(c1)
 
 def find_random_path(start_vertex, end_vertex, path=None):
     """ find a path from start_vertex to end_vertex
@@ -128,7 +127,7 @@ def return_edges(path):
 has_cut = False
 if not has_cut:
     # find nodes to cut
-    for i in range(50):
+    for i in range(25):
         random.shuffle(k1)
         random.shuffle(k2)
         for node_0 in zip(k1[:sz], k2[:sz]):
