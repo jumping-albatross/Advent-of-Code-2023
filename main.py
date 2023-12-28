@@ -128,7 +128,7 @@ def return_edges(path):
 has_cut = False
 if not has_cut:
     # find nodes to cut
-    for i in range(100):
+    for i in range(50):
         random.shuffle(k1)
         random.shuffle(k2)
         for node_0 in zip(k1[:sz], k2[:sz]):
