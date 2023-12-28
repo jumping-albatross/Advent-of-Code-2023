@@ -2,10 +2,12 @@
 # https://www.reddit.com/r/adventofcode/comments/18qbsxs/comment/kf12xgf/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 # https://python-course.eu/applications-python/graphs-python.php
 # https://www.reddit.com/r/adventofcode/comments/18qbsxs/comment/keuafrl/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+# https://www.reddit.com/r/adventofcode/comments/18qbsxs/comment/kf94vru/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 
 import random
-from time import time
+from time import time, asctime
 
+print(f"Starting at {asctime()}...\n")
 testing = False
 
 if testing:
@@ -28,28 +30,33 @@ else:
 
 connections = raw_connections.strip().splitlines()
 nodes = {}
+
+
+def add_node(nodes, n1, n2):
+    if n1 not in nodes:
+        nodes[n1] = {n2}
+    else:
+        nodes[n1].add(n2)
+
+
+# create the graph
 for line in connections:
     node, neighbours = line.split(': ')
-    neighbours = neighbours.split(' ')
-    if node not in nodes:
-        nodes[node] = {neighbours[0]}
-    else:
-        nodes[node].add(neighbours[0])
+    neighbours = neighbours.split()
+    add_node(nodes, node, neighbours[0])
 
     for _n in neighbours[1:]:
         nodes[node].add(_n)
 
     for _n in neighbours:
-        if _n not in nodes:
-            nodes[_n] = {node}
-        else:
-            nodes[_n].add(node)
+        add_node(nodes, _n, node)
 
+
+def cut_edges(edges=[('fch', 'fvh'), ('jbz', 'sqh'), ('nvg', 'vfj')]):
 # cut the nodes
-# if not testing:
-#     for (c1, c2) in [('fch', 'fvh'), ('jbz', 'sqh'), ('nvg', 'vfj')]:
-#         nodes[c1].remove(c2)
-#         nodes[c2].remove(c1)
+    for (c1, c2) in edges:
+        nodes[c1].remove(c2)
+        nodes[c2].remove(c1)
 
 def find_random_path(start_vertex, end_vertex, path=None):
     """ find a path from start_vertex to end_vertex
@@ -73,16 +80,15 @@ def find_random_path(start_vertex, end_vertex, path=None):
     return None
 
 
-def find_ni_random_path(start_vertex, end_vertex):
+def find_random_path_iterate(start_vertex, end_vertex):
     """ iteratively find a path from start_vertex to end_vertex
         in graph """
-    graph = nodes
     stack = [(start_vertex, [start_vertex])]
     while stack:
         (vertex, path) = stack.pop()
         if vertex == end_vertex:
             return path
-        neighbours = list(graph[vertex])
+        neighbours = list(nodes[vertex])
         random.shuffle(neighbours)
         for neighbour in neighbours:
             if neighbour not in path:
@@ -132,7 +138,7 @@ if not has_cut:
         random.shuffle(k2)
         for node_0 in zip(k1[:sz], k2[:sz]):
             rounds += 1
-            pt = find_ni_random_path(node_0[0], node_0[1])
+            pt = find_random_path_iterate(node_0[0], node_0[1])
             if pt != None:
                 for n in return_edges(pt):
                     if n in node_frequencies:
@@ -159,7 +165,7 @@ else:
             for i in list(nodes.keys()):
                 if i in set_other or i in set_n:
                     break
-                pt = find_ni_random_path(i, founder_n)
+                pt = find_random_path_iterate(i, founder_n)
                 if pt != None:
                     set_n.add(i)
                     break
