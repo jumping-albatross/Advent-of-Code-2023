@@ -9,6 +9,7 @@
 
 import random
 from time import time
+import heapq
 
 testing = False
 to_search = True
@@ -98,7 +99,6 @@ def find_path(start_vertex, end_vertex, path=None):
                 return extended_path
     return None
 
-import heapq
 
 def bfs(f1, f2, s1, s2, graph):
     for (f, s, other) in zip([f1, f2], [s1, s2], [s2, s1]):
@@ -115,6 +115,7 @@ def bfs(f1, f2, s1, s2, graph):
                     heapq.heappush(q, (idx, n))
                 if n in other:
                     raise Exception("This is not a bipartite graph")
+
 
 edge_frequencies = {}
 
@@ -160,7 +161,6 @@ if to_search:
     print()
 
     key_edges = s1
-
 
 if to_cut:
     # cut the nodes
