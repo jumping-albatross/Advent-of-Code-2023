@@ -32,11 +32,11 @@ connections = raw_connections.strip().splitlines()
 nodes = {}
 
 
-def add_node(nodes, n1, n2):
-    if n1 not in nodes:
-        nodes[n1] = {n2}
+def add_node(graph, n1, n2):
+    if n1 not in graph:
+        graph[n1] = {n2}
     else:
-        nodes[n1].add(n2)
+        graph[n1].add(n2)
 
 
 # create the graph
