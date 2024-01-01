@@ -1,6 +1,8 @@
 # https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
 # https://www.reddit.com/r/adventofcode/comments/18o7014/comment/keylpbi/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+# https://github.com/derailed-dash/Advent-of-Code/blob/master/src/AoC_2023/Dazbo's_Advent_of_Code_2023.ipynb
 #
+
 testing = False
 
 if testing:

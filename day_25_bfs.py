@@ -68,6 +68,23 @@ def find_ni_random_path(start_vertex, end_vertex):
     return None
 
 
+def find_ni_path(start_vertex, end_vertex):
+    """ iteratively find a path from start_vertex to end_vertex
+        in graph """
+    graph = nodes
+    stack = [(start_vertex, [start_vertex])]
+    while stack:
+        (vertex, path) = stack.pop()
+        if vertex == end_vertex:
+            return path
+        neighbours = list(graph[vertex])
+        for neighbour in neighbours:
+            if neighbour not in path:
+                stack.append((neighbour, path + [neighbour]))
+                break
+    return None
+
+
 def bfs(f1, f2, s1, s2, graph):
     for (f, s, other) in zip([f1, f2], [s1, s2], [s2, s1]):
         idx = 0
@@ -79,7 +96,7 @@ def bfs(f1, f2, s1, s2, graph):
             neighbours = graph[current]
             for n in neighbours:
                 if n in other:
-                    print("This is not a bipartite graph")
+                    print("*" * 40, "\n", "This is NOT a bipartite graph", "\n", "*" * 40)
                     return 1
                 if n not in s:
                     s.add(n)
@@ -94,8 +111,8 @@ def return_edges(path):
     return e
 
 
-# try this 10 times
-for _ in range(40):
+# test this a certain number of times
+for _ in range(1):
 
     connections = raw_connections.strip().splitlines()
     nodes = {}
@@ -122,15 +139,20 @@ for _ in range(40):
 
     if to_search:
         # find edges to cut
-        # @ 20 no failures in 40 tests
+        # @ 20 random path repetitions no failures in 40 tests
+        # @ 10 random path repetitions 4/40 failures
+        # @  5 non-random path repetitions 16/16 failures
+        # @  5 random path repetitions 18/40 failures
+        # @  1 random path repetitions 40/40 failures
+
         t1 = time()
-        _n = 10
+        _n = 20
 
         for i in range(_n):
             random.shuffle(k1)
             random.shuffle(k2)
             for node_0 in zip(k1, k2):
-                pt = find_ni_random_path(node_0[0], node_0[1])
+                pt = find_ni_path(node_0[0], node_0[1])
                 if pt is not None:
                     for n in return_edges(pt):
                         if n in edge_frequencies:
