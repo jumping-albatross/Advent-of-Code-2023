@@ -1,7 +1,10 @@
 # https://github.com/oloturia/AoC2023/blob/main/day21/part1.py
 # https://www.reddit.com/r/adventofcode/comments/18o7014/comment/keylpbi/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 # https://github.com/derailed-dash/Advent-of-Code/blob/master/src/AoC_2023/Dazbo's_Advent_of_Code_2023.ipynb
-#
+
+import copy
+
+print("Day 22 (2023): Jenga", "\n")
 
 testing = False
 
@@ -21,11 +24,10 @@ else:
 raw_coordinates = [x.split('~') for x in grid]
 raw_coordinates = [[list(map(int, x[0].split(','))), list(map(int, x[1].split(',')))] for x in raw_coordinates]
 
-# c = 557, rng = 4, lo = 0, hi = 9, idx = 0
-# c = 554, rng = 4, lo = 0, hi = 9, idx = 1
-# c = 134, rng = 4, lo = 1, hi = 308, idx = 2
+# X c = 557, rng = 4, lo = 0, hi = 9,   idx = 0
+# Y c = 554, rng = 4, lo = 0, hi = 9,   idx = 1
+# Z c = 134, rng = 4, lo = 1, hi = 308, idx = 2
 
-heights = [[0] * 10 for _ in range(10)]
 bricks = []
 
 X, Y, Z = 0, 1, 2
@@ -39,59 +41,79 @@ for u, v in raw_coordinates:
 
 bricks.sort()
 
-for c in bricks[-1:-8:-1]:
+
+def drop_all_bricks(_bricks, topo_map=None):
+    """Drops all bricks to their lowest height in the given Jenga stack"""
+    if topo_map is None:
+        topo_map = [[0] * 10 for _ in range(10)]
+
+    falls = 0
+
+    for idx, (brick_base, u, v) in enumerate(_bricks):
+        highest_elev = 0
+
+        for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
+            for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
+                highest_elev = max(highest_elev, topo_map[x][y] + 1)
+
+        fall_distance = min(u[Z], v[Z]) - highest_elev
+
+        for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
+            for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
+                topo_map[x][y] = highest_elev + abs(u[Z] - v[Z])
+
+        _bricks[idx][0] = highest_elev
+        _bricks[idx][1][Z] -= fall_distance
+        _bricks[idx][2][Z] -= fall_distance
+
+        falls += fall_distance > 0
+
+    return falls
+
+
+print("Top 2 bricks, before fall")
+for c in bricks[-1:-3:-1]:
     print(c)
 
-# fall, round 1
-for idx, (base, u, v) in enumerate(bricks):
-    highest = 0
-    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
-        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-            highest = max(highest, heights[x][y] + 1)
+drop_all_bricks(bricks)
 
-    drop = min(u[Z], v[Z]) - highest
-
-    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
-        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-            heights[x][y] = highest + abs(u[Z] - v[Z])
-
-    bricks[idx][0] = highest
-    bricks[idx][1][Z] -= drop
-    bricks[idx][2][Z] -= drop
+print("\nTop 2 bricks, after fall")
+for c in bricks[-1:-3:-1]:
+    print(c)
 
 print()
 
-for c in bricks[-1:-8:-1]:
-    print(c)
+disintegrate_ok_sum = 0
+bricks_fall_sum = 0
 
-print()
-
-for h in heights:
-    print(h)
-
-# disintegrate
-dis_counter = 0
+# TO DO optimize this nested for loop to avoid re-building heights each time
 for dis_idx in range(len(bricks)):
     heights = [[0] * 10 for _ in range(10)]
     for idx, (base, u, v) in enumerate(bricks):
         if idx == dis_idx:
             continue
+
         highest = 0
+
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
                 highest = max(highest, heights[x][y] + 1)
 
         drop = min(u[Z], v[Z]) - highest
 
+        if drop > 0:
+            # part 2: see how many other bricks fall when this one is disintegrated
+            bricks_fall_sum += drop_all_bricks(copy.deepcopy(bricks[idx:]), topo_map=copy.deepcopy(heights))
+
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
                 heights[x][y] = highest + abs(u[Z] - v[Z])
+
         if drop > 0:
-            # print(f"Discarded: drop = {drop:>3}:base = {base:>3}, {u = }, {v =}, {dis_idx = }, {bricks[dis_idx] = }")
+            # part 1: bricks fall after disintegration, not safe to disintegrate
             break
     else:
-        dis_counter += 1
+        disintegrate_ok_sum += 1
 
-print(f"{dis_counter = } (expected 441)")
-
-# 441 correct
+print(f"Part 1: {disintegrate_ok_sum = } (expected 5 for test; 441 for full data set)")
+print(f"Part 2: {bricks_fall_sum = } (expected 7 for test; 80778 for full data set)")
