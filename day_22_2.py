@@ -3,6 +3,7 @@
 # https://github.com/derailed-dash/Advent-of-Code/blob/master/src/AoC_2023/Dazbo's_Advent_of_Code_2023.ipynb
 
 import copy
+import time
 
 print("Day 22 (2023): Jenga", "\n")
 
@@ -42,10 +43,10 @@ for u, v in raw_coordinates:
 bricks.sort()
 
 
-def drop_all_bricks(_bricks, topo_map=None):
+def drop_all_bricks(_bricks, _topo_map=None):
     """Drops all bricks to their lowest height in the given Jenga stack"""
-    if topo_map is None:
-        topo_map = [[0] * 10 for _ in range(10)]
+    if _topo_map is None:
+        _topo_map = [[0] * 10 for _ in range(10)]
 
     falls = 0
 
@@ -54,13 +55,13 @@ def drop_all_bricks(_bricks, topo_map=None):
 
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-                highest_elev = max(highest_elev, topo_map[x][y] + 1)
+                highest_elev = max(highest_elev, _topo_map[x][y] + 1)
 
         fall_distance = min(u[Z], v[Z]) - highest_elev
 
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-                topo_map[x][y] = highest_elev + abs(u[Z] - v[Z])
+                _topo_map[x][y] = highest_elev + abs(u[Z] - v[Z])
 
         _bricks[idx][0] = highest_elev
         _bricks[idx][1][Z] -= fall_distance
@@ -75,7 +76,9 @@ print("Top 2 bricks, before fall")
 for c in bricks[-1:-3:-1]:
     print(c)
 
+t1 = time.time_ns()
 drop_all_bricks(bricks)
+t2 = time.time_ns()
 
 print("\nTop 2 bricks, after fall")
 for c in bricks[-1:-3:-1]:
@@ -85,10 +88,10 @@ print()
 
 disintegrate_ok_sum = 0
 bricks_fall_sum = 0
-
+t3 = time.time_ns()
 # TO DO optimize this nested for loop to avoid re-building heights each time
 for dis_idx in range(len(bricks)):
-    heights = [[0] * 10 for _ in range(10)]
+    topo_map = [[0] * 10 for _ in range(10)]
     for idx, (base, u, v) in enumerate(bricks):
         if idx == dis_idx:
             continue
@@ -97,23 +100,27 @@ for dis_idx in range(len(bricks)):
 
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-                highest = max(highest, heights[x][y] + 1)
+                highest = max(highest, topo_map[x][y] + 1)
 
         drop = min(u[Z], v[Z]) - highest
 
         if drop > 0:
             # part 2: see how many other bricks fall when this one is disintegrated
-            bricks_fall_sum += drop_all_bricks(copy.deepcopy(bricks[idx:]), topo_map=copy.deepcopy(heights))
+            bricks_fall_sum += drop_all_bricks(copy.deepcopy(bricks[idx:]), _topo_map=copy.deepcopy(topo_map))
 
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-                heights[x][y] = highest + abs(u[Z] - v[Z])
+                topo_map[x][y] = highest + abs(u[Z] - v[Z])
 
         if drop > 0:
             # part 1: bricks fall after disintegration, not safe to disintegrate
             break
     else:
         disintegrate_ok_sum += 1
-
+t4 = time.time_ns()
+print()
+print(f"Drop all tiles: {(t2 - t1) / 1e9:.4f} s and disintegrate all tiles {(t4 - t3) / 1e9:.4f} s")
+# Drop all tiles: 0.0170 s and disintegrate all tiles 15.8034 s
+print()
 print(f"Part 1: {disintegrate_ok_sum = } (expected 5 for test; 441 for full data set)")
 print(f"Part 2: {bricks_fall_sum = } (expected 7 for test; 80778 for full data set)")
