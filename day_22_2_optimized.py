@@ -88,16 +88,13 @@ print()
 
 disintegrate_ok_sum = 0
 bricks_fall_sum = 0
-
 t3 = time.time_ns()
-
 # TO DO optimize this nested for loop to avoid re-building heights each time
+topo_map_original = [[0] * 10 for _ in range(10)]
 for dis_idx in range(len(bricks)):
-    topo_map = [[0] * 10 for _ in range(10)]
-    for idx, (base, u, v) in enumerate(bricks):
-        if idx == dis_idx:
-            continue
+    topo_map = copy.deepcopy(topo_map_original)
 
+    for idx, (base, u, v) in enumerate(bricks[dis_idx + 1:]):
         highest = 0
 
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
@@ -108,7 +105,8 @@ for dis_idx in range(len(bricks)):
 
         if drop > 0:
             # part 2: see how many other bricks fall when this one is disintegrated
-            bricks_fall_sum += drop_all_bricks(copy.deepcopy(bricks[idx:]), _topo_map=copy.deepcopy(topo_map))
+            bricks_fall_sum += drop_all_bricks(copy.deepcopy(bricks[dis_idx + 1 + idx:]),
+                                               _topo_map=copy.deepcopy(topo_map))
 
         for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
             for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
@@ -119,10 +117,26 @@ for dis_idx in range(len(bricks)):
             break
     else:
         disintegrate_ok_sum += 1
+
+    highest = 0
+    _, u, v = bricks[dis_idx]
+
+    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
+        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
+            highest = max(highest, topo_map_original[x][y] + 1)
+
+    drop = min(u[Z], v[Z]) - highest
+
+    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
+        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
+            topo_map_original[x][y] = highest + abs(u[Z] - v[Z])
+
 t4 = time.time_ns()
+
 print()
 print(f"Drop all tiles: {(t2 - t1) / 1e9:.4f} s and disintegrate all tiles {(t4 - t3) / 1e9:.4f} s")
-# Drop all tiles: 0.0170 s and disintegrate all tiles 15.8034 s
+# Unoptimized: Drop all tiles: 0.0170 s and disintegrate all tiles 15.8034 s
+# Optimized:   Drop all tiles: 0.0157 s and disintegrate all tiles 9.3558 s
 print()
 print(f"Part 1: {disintegrate_ok_sum = } (expected 5 for test; 441 for full data set)")
 print(f"Part 2: {bricks_fall_sum = } (expected 7 for test; 80778 for full data set)")
