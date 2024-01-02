@@ -25,23 +25,16 @@ else:
 raw_coordinates = [x.split('~') for x in grid]
 raw_coordinates = [[list(map(int, x[0].split(','))), list(map(int, x[1].split(',')))] for x in raw_coordinates]
 
+# moral of the story: accept input data as is with only a minor sort
+X, Y, Z = 0, 1, 2
+
+bricks = [[u[Z], u, v] for u, v in raw_coordinates]
+bricks.sort()
+
+
 # X c = 557, rng = 4, lo = 0, hi = 9,   idx = 0
 # Y c = 554, rng = 4, lo = 0, hi = 9,   idx = 1
 # Z c = 134, rng = 4, lo = 1, hi = 308, idx = 2
-
-bricks = []
-
-X, Y, Z = 0, 1, 2
-
-# moral of the story: accept input data as is with only a minor sort
-for u, v in raw_coordinates:
-    lo = u[Z]
-    uu = u
-    vv = v
-    bricks.append([lo, uu, vv])
-
-bricks.sort()
-
 
 def drop_all_bricks(_bricks, _topo_map=None):
     """Drops all bricks to their lowest height in the given Jenga stack"""
@@ -51,17 +44,7 @@ def drop_all_bricks(_bricks, _topo_map=None):
     falls = 0
 
     for idx, (brick_base, u, v) in enumerate(_bricks):
-        highest_elev = 0
-
-        for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
-            for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-                highest_elev = max(highest_elev, _topo_map[x][y] + 1)
-
-        fall_distance = min(u[Z], v[Z]) - highest_elev
-
-        for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
-            for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-                _topo_map[x][y] = highest_elev + abs(u[Z] - v[Z])
+        fall_distance, highest_elev = drop_one_brick(_topo_map, u, v)
 
         _bricks[idx][0] = highest_elev
         _bricks[idx][1][Z] -= fall_distance
@@ -70,6 +53,22 @@ def drop_all_bricks(_bricks, _topo_map=None):
         falls += fall_distance > 0
 
     return falls
+
+
+def drop_one_brick(_topo_map, u, v):
+    highest_elev = 0
+
+    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
+        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
+            highest_elev = max(highest_elev, _topo_map[x][y] + 1)
+
+    fall_distance = min(u[Z], v[Z]) - highest_elev
+
+    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
+        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
+            _topo_map[x][y] = highest_elev + abs(u[Z] - v[Z])
+
+    return fall_distance, highest_elev
 
 
 print("Top 2 bricks, before fall")
@@ -88,9 +87,12 @@ print()
 
 disintegrate_ok_sum = 0
 bricks_fall_sum = 0
-t3 = time.time_ns()
+
 # TO DO optimize this nested for loop to avoid re-building heights each time
+
+t3 = time.time_ns()
 topo_map_original = [[0] * 10 for _ in range(10)]
+
 for dis_idx in range(len(bricks)):
     topo_map = copy.deepcopy(topo_map_original)
 
@@ -118,18 +120,7 @@ for dis_idx in range(len(bricks)):
     else:
         disintegrate_ok_sum += 1
 
-    highest = 0
-    _, u, v = bricks[dis_idx]
-
-    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
-        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-            highest = max(highest, topo_map_original[x][y] + 1)
-
-    drop = min(u[Z], v[Z]) - highest
-
-    for x in range(min(u[X], v[X]), max(u[X], v[X]) + 1):
-        for y in range(min(u[Y], v[Y]), max(u[Y], v[Y]) + 1):
-            topo_map_original[x][y] = highest + abs(u[Z] - v[Z])
+    drop_one_brick(topo_map_original, bricks[dis_idx][1], bricks[dis_idx][2])
 
 t4 = time.time_ns()
 
