@@ -57,13 +57,13 @@ for i in range(len(eq)):
         x1, y1, _ = coord_1
         x2, y2, _ = coord_2
 
-        m1, yc1 = v1y / v1x, 1
-        m2, yc2 = v2y / v2x, 1
+        m1 = v1y / v1x
+        m2 = v2y / v2x
 
-        b1 = -m1 * x1 + yc1 * y1
-        b2 = -m2 * x2 + yc2 * y2
+        b1 = -m1 * x1 + y1
+        b2 = -m2 * x2 + y2
 
-        a = np.array([[-m1, yc1], [-m2, yc2]])
+        a = np.array([[-m1, 1], [-m2, 1]])
         b = np.array([b1, b2])
 
         if v1y / v1x != v2y / v2x:  # not parallel
