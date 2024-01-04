@@ -26,8 +26,8 @@ else:
 
 
 def process_raw_data():
-    for hailstone in raw:
-        position, velocity = hailstone.split("@")
+    for hail_stone in raw:
+        position, velocity = hail_stone.split("@")
         p = [int(p_raw) for p_raw in position.split(",")]
         v = [int(v_raw) for v_raw in velocity.split(",")]
         eq.append([p, v])
@@ -126,6 +126,10 @@ for hailstone in eq[:4]:  # minimum required is 4
 
     stones.append(sympy.Eq((xh - xr) * (vyr - vyh), (yh - yr) * (vxr - vxh)))  # equality
     stones.append(sympy.Eq((xh - xr) * (vzr - vzh), (zh - zr) * (vxr - vxh)))
+
+    # stones.append(((xh - xr) * (vyr - vyh) - (yh - yr) * (vxr - vxh)))  # equality
+    # stones.append(((xh - xr) * (vzr - vzh) - (zh - zr) * (vxr - vxh)))
+
 
 s = sympy.solve(stones)[0]  # why a list?
 x, y, z = s[xr], s[yr], s[zr]
