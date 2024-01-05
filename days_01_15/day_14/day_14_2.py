@@ -1,3 +1,5 @@
+# Check out https://github.com/hyper-neutrino/advent-of-code/blob/main/2023/day14p2.py
+
 import operator
 
 testing = False
