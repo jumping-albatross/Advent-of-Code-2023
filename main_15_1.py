@@ -16,3 +16,11 @@ for step in steps:
     t += current
 
 print(t)
+
+print("""TODO
+dentist
+optometrist
+letter to doc
+note to aunluk
+sms DS
+""")
