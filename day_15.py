@@ -17,7 +17,7 @@ def HASH(value):
     return h
 
 
-print("Part 1:", sum([HASH(s) for s in steps]))
+print(f"Part 1: {sum([HASH(s) for s in steps])}")
 
 boxes_256 = [[] for _ in range(256)]
 
