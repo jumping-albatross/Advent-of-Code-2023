@@ -1,4 +1,5 @@
-raw = """px{a<2006:qkq,m>2090:A,rfg}
+if True:
+    raw = """px{a<2006:qkq,m>2090:A,rfg}
 pv{a>1716:R,A}
 lnx{m>1548:A,A}
 rfg{s<537:gd,x>2440:R,A}
@@ -15,9 +16,9 @@ hdj{m>838:A,pv}
 {x=2036,m=264,a=79,s=2244}
 {x=2461,m=1339,a=466,s=291}
 {x=2127,m=1623,a=2188,s=1013}""".strip()
-
-# with open("data19.txt") as f:
-#     raw = f.read().strip()
+else:
+    with open("data19.txt") as f:
+        raw = f.read().strip()
 
 
 raw_i, raw_parts = raw.split('\n\n')
@@ -70,9 +71,9 @@ def rec(dest_in, ranges_in):
         else:
             condition, name = i
             idx = XMAS['x']
-            
+    return ranges_returned
 # recursion
 
 possibilities = rec('in', ((),(),(),()))
-
-# print(f"{possibilities = } vs 167409079868000; % = {(possibilities - 167409079868000)/167409079868000 * 100:.1f}")
+print(f"{possibilities = }")
+print(f"{possibilities = } vs 167409079868000; % = {(possibilities - 167409079868000)/167409079868000 * 100:.1f}")
