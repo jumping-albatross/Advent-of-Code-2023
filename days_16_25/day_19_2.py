@@ -1,4 +1,4 @@
-if True:
+if False:
     raw = """px{a<2006:qkq,m>2090:A,rfg}
 pv{a>1716:R,A}
 lnx{m>1548:A,A}
@@ -17,7 +17,7 @@ hdj{m>838:A,pv}
 {x=2461,m=1339,a=466,s=291}
 {x=2127,m=1623,a=2188,s=1013}""".strip()
 else:
-    with open("data19.txt") as f:
+    with open("day_19.dat") as f:
         raw = f.read().strip()
 
 

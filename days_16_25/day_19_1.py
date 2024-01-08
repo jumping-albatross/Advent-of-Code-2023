@@ -16,13 +16,15 @@ hdj{m>838:A,pv}
 {x=2461,m=1339,a=466,s=291}
 {x=2127,m=1623,a=2188,s=1013}""".strip()
 
-with open("data19.txt") as f:
+with open("day_19.dat") as f:
     raw = f.read().strip()
+
 
 def generate_part(part):
     """converts x=,m=,a=,s= to (x, m, a, s)"""
     xmas = [int(p.split('=')[1]) for p in part]
     return tuple(xmas)
+
 
 raw_i, raw_parts = raw.split('\n\n')
 raw_i = raw_i.split('\n')
@@ -39,6 +41,7 @@ for inst in raw_i:
     print(name, rules)
     instructions[name] = rules
 
+
 def check_part(part, dest):
     x, m, a, s = part
     print(part, dest, x, m, a, s)
@@ -49,6 +52,7 @@ def check_part(part, dest):
                 return r[1]
     else:
         return rule[-1]
+
 
 accepted = []
 for part in parts:
@@ -61,7 +65,9 @@ for part in parts:
 
 print()
 print(f"n = {len(accepted)}")
+
 s = 0
 for good in accepted:
     s += sum(good)
+
 print(f"sum = {s}")

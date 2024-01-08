@@ -28,7 +28,7 @@ if testing:
 #####################.#
 """
 else:
-    with open('day23.txt') as f:
+    with open('day_23.dat') as f:
         grid = f.read()
 
 grid = grid.strip()

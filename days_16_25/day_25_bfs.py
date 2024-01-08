@@ -34,7 +34,7 @@ rzs: qnr cmg lsr rsh
 frs: qnr lhk lsr"""
 else:
     key_edges = (('fch', 'fvh'), ('jbz', 'sqh'), ('nvg', 'vfj'))
-    with open('day25.txt') as f:
+    with open('day_25.dat') as f:
         raw_connections = f.read()
 
 

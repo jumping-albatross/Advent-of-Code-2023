@@ -25,7 +25,7 @@ lsr: lhk
 rzs: qnr cmg lsr rsh
 frs: qnr lhk lsr"""
 else:
-    with open('day25.txt') as f:
+    with open('day_25.dat') as f:
         raw_connections = f.read()
 
 connections = raw_connections.strip().splitlines()

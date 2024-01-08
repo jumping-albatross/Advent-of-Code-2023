@@ -28,7 +28,7 @@ if testing:
 #####################.#
 """.strip().split('\n')
 else:
-    with open('day23.txt') as f:
+    with open('day_23.dat') as f:
         grid = f.read().strip().split('\n')
 
 start = (0, 1)

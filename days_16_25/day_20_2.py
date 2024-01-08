@@ -12,7 +12,7 @@ raw = """broadcaster -> a, b, c
 # %b -> co
 # &co -> output""".split('\n')
 
-with open('day20.txt') as f:
+with open('day_20.dat') as f:
     raw = f.read().split('\n')
 
 modules = {}
