@@ -7,7 +7,7 @@ KK677 28
 KTJJT 220
 QQQJA 483'''.split('\n')
 else:
-    with open('data07.txt') as f:
+    with open('day_07.dat') as f:
         raw = f.read().split('\n')
 
 hands = [[list(x.split()[0]), int(x.split()[1])] for x in raw]

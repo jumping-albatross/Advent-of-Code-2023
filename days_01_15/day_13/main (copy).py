@@ -15,7 +15,7 @@ raw = """#.##..##.
 #....#..#""".split("\n\n")
 
 # . == ash # == rock
-with open("data13.txt") as r:
+with open("day_13.dat") as r:
     raw = r.read().split("\n\n")
 
 patterns = [pattern.split("\n") for pattern in raw]

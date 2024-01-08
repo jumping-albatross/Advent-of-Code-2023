@@ -13,7 +13,7 @@ if is_testing:
 XXX = (XXX, XXX)'''.split('\n')
     goal = 2
 else:
-    with open('data08.txt') as f:
+    with open('day_08.dat') as f:
         raw = f.read().split('\n')
     goal = 0
 

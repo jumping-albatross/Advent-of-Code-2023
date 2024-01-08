@@ -1,6 +1,6 @@
 from math import lcm
 
-a = open('data08.txt').read().split('\n\n')
+a = open('day_08.dat').read().split('\n\n')
 d = a[0]
 
 dirs = {b[:3]: (b[7:10], b[12:15]) for b in a[1].split('\n')}
@@ -32,7 +32,7 @@ if is_testing:
 22Z = (22B, 22B)
 XXX = (XXX, XXX)'''.split('\n')
 else:
-    with open('data08.txt') as f:
+    with open('day_08.dat') as f:
         raw = f.read().split('\n')
     goal = 0
 

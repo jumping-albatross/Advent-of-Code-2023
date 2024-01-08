@@ -9,7 +9,7 @@ raw = """...#......
 .......#..
 #...#.....""".split("\n")
 
-with open("data11.txt") as r:
+with open("day_11.dat") as r:
     raw = r.read().split("\n")
 
 matrix = [list(x) for x in raw]

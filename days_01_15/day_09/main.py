@@ -5,7 +5,7 @@ if testing:
 1 3 6 10 15 21
 10 13 16 21 30 45'''.strip().split('\n')
 else:
-    with open('data09.txt') as f:
+    with open('day_09.dat') as f:
         raw = f.read().strip().split('\n')
 
 sequences = [list(map(int, x.strip().split())) for x in raw]

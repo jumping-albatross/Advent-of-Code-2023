@@ -9,7 +9,7 @@ O.#..O.#.#
 #....###..
 #OO..#....""".split("\n")
 
-# with open("data14.txt") as r:
+# with open("day_14.dat") as r:
 #     raw = r.read().split("\n")
 
 platform = [list(x) for x in raw]

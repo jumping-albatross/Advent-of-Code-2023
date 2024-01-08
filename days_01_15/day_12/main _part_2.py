@@ -5,7 +5,7 @@ raw = """???.### 1,1,3
 ????.######..#####. 1,6,5
 ?###???????? 3,2,1""".split("\n")
 
-with open("data12.txt") as r:
+with open("day_12.dat") as r:
     raw = r.read().split("\n")
 
 rows = []

@@ -1,4 +1,4 @@
-with open('data03.txt') as f:
+with open('day_03.dat') as f:
     raw = f.read().split('\n')
 
 # raw = '''467..114..

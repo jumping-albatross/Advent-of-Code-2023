@@ -19,7 +19,7 @@ if testing:
 '''.strip().split('\n')
     part_1 = 23
 else:
-    with open('data10.txt') as f:
+    with open('day_10.dat') as f:
         raw = f.read().strip().split('\n')
     part_1 = 6890
 

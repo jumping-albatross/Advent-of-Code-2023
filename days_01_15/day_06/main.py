@@ -21,7 +21,7 @@ import math
 raw = '''Time:      7  15   30
 Distance:  9  40  200'''.split('\n')
 
-with open('data06.txt') as f:
+with open('day_06.dat') as f:
     raw = f.read().split('\n')
 
 is_part_one = False

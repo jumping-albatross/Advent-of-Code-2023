@@ -32,7 +32,7 @@ humidity-to-location map:
 60 56 37
 56 93 4'''
 
-with open('data05.txt') as f:
+with open('day_05.dat') as f:
     raw = f.read().strip()
 
 # Stage 1 Prepare data

@@ -17,7 +17,7 @@ O.#..O.#.#
 #....###..
 #OO..#....""".strip().split("\n")
 else:
-    with open("data14.txt") as r:
+    with open("day_14.dat") as r:
         raw = r.read().strip().split("\n")
 
 ROWS = len(raw)

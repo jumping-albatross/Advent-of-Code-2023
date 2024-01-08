@@ -7,7 +7,7 @@ if testing:
 .L-J.
 .....'''.strip().split('\n')
 else:
-    with open('data10.txt') as f:
+    with open('day_10.dat') as f:
         raw = f.read().strip().split('\n')
 
 grid = raw

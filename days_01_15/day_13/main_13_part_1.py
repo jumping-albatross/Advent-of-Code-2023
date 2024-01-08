@@ -17,7 +17,7 @@ raw = """#.##..##.
 )
 
 # . == ash # == rock
-with open("data13.txt") as r:
+with open("day_13.dat") as r:
     raw = r.read().split("\n\n")
 
 

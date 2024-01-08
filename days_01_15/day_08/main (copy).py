@@ -23,7 +23,7 @@ BBB = (AAA, ZZZ)
 ZZZ = (ZZZ, ZZZ)'''.split('\n')
         goal = 6
 else:
-    with open('data08.txt') as f:
+    with open('day_08.dat') as f:
         raw = f.read().split('\n')
     goal = 0
 
