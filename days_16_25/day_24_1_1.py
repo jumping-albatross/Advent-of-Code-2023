@@ -16,7 +16,7 @@ if testing:
 """.strip()
     raw = r_raw.splitlines()
 else:
-    with open('day_24.txt') as r:
+    with open('day_24.dat') as r:
         r_raw = r.read().strip()
         raw = r_raw.splitlines()
 

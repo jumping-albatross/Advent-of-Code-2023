@@ -13,7 +13,7 @@ if testing:
 1,1,8~1,1,9
 """.strip().split('\n')
 else:
-    with open('day_22.txt') as f:
+    with open('day_22.dat') as f:
         grid = f.read().strip().split('\n')
 
 raw_coordinates = [x.split('~') for x in grid]
