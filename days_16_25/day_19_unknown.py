@@ -16,7 +16,7 @@ hdj{m>838:A,pv}
 {x=2461,m=1339,a=466,s=291}
 {x=2127,m=1623,a=2188,s=1013}""".strip()
 
-# with open("data19.txt") as f:
+# with open("day_19.dat") as f:
 #     raw = f.read().strip()
 
 

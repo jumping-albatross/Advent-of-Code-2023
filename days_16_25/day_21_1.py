@@ -17,7 +17,7 @@ if testing:
 ...........""".split('\n')
 else:
     STEPS = 64
-    with open('day_21.txt') as f:
+    with open('day_21.dat') as f:
         grid = f.read().strip().split('\n')
 
 for i, row in enumerate(grid):
