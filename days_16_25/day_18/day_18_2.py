@@ -18,7 +18,7 @@ L 2 (#015232)
 U 2 (#7a21e3)
 """.strip().split("\n")
 
-with open('data18.txt') as f:
+with open('day_18.dat') as f:
     dig_plan = f.read().strip().split('\n')
 
 directions = [(int('0x' + x.split('#')[1][:5], 16),

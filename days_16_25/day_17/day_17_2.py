@@ -17,7 +17,7 @@ grid = """2413432311323
 2546548887735
 4322674655533""".split("\n")
 
-# with open('data17.txt') as f:
+# with open('day_17.dat') as f:
 #     grid = f.read().split('\n')
 
 R = len(grid)

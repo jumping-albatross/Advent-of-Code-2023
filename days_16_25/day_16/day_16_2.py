@@ -15,7 +15,7 @@ raw = """.|...`....
 .|....-|.`
 ..//.|....""".split("\n")
 
-with open("data16.txt") as f:
+with open("day_16.dat") as f:
     raw = f.read().split("\n")
 
 R = len(raw)
